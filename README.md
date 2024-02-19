@@ -18,7 +18,7 @@
 | [props-drilling](https://react.dev/learn#sharing-data-between-components)|                            |                 |
 | [Semantic-Commits](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716) |             |                 |
 | Deploy with [Vercel](https://vercel.com/kaplanh) |                                 |                 |
-|API [fullstack.clarusway]( "https://tutorial-api.fullstack.clarusway.com/tutorials/") |                                 |                 |
+|API [fullstack.clarusway](https://tutorial-api.fullstack.clarusway.com/tutorials/) |                                 |                 |
 
 ---
 
