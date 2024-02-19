@@ -1,18 +1,19 @@
-# Task Traker
+# Tutorial App (CRUD Operations with Axios)
 
-[:point_right: Click here to see on browser](https://random-user-with-react-v1.netlify.app/)
+[:point_right: Click here to see on browser]()
 
-![appointment]()
+![tasktraker]
+
 
 ---
 
 | **What's used in this app ?**                         | **How use third party libraries**          | **Author**                                                     |
 | ----------------------------------------------------- | ------------------------------------------ | -------------------------------------------------------------- |
-| [useEfect() Hook](https://react.dev/learn#using-hooks)|                                            | [Take a look at my portfolio](https://kaplanh.github.io/Portfolio_with_CssFlex/) |
+| [useEfect() Hook componentDidUpdate()](https://react.dev/learn#using-hooks)|                                            | [Take a look at my portfolio](https://kaplanh.github.io/Portfolio_with_CssFlex/) |
 | [useState() Hook](https://react.dev/learn#using-hooks)|                                            | [Visit me on Linkedin](https://www.linkedin.com/in/kaplan-h/)                    |
-| [LocalStorage](https://www.w3schools.com/jsref/prop_win_localstorage.asp)|                         |                    |
+| [CRUD OPERATIONS with axios API](https://www.npmjs.com/package/axios)(https://www.npmjs.com/package/axios#axios-api) | npm i/yarn add axios                        |                    |
 | [react-events](https://react.dev/learn#responding-to-events)|                                      |                    |
-| [React-Conditional rendering](https://react.dev/learn#conditional-rendering) |                     |                    |
+| [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/) |                     |                    |
 | [React-icons](https://react-icons.github.io/react-icons/)| npm i / yarn add react-icons               |                 |
 | [props-drilling](https://react.dev/learn#sharing-data-between-components)|                            |                 |
 | [Semantic-Commits](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716) |             |                 |
@@ -86,24 +87,21 @@ OR
 ## Project Skeleton
 
 ```
- Appointment App (folder)
+ Tutorial App(folder)
 |
 |----public (folder)
 │     └── index.html
 |----src (folder)
 |    |--- components (folder)
-│    │       ├── AddTaskForm.jsx
-│    │       ├── Header.jsx
-│    │       ├── ShowTasks.jsx
+│    │       ├── AddTutorial.jsx
+│    │       ├── EditTutorial.jsx
+│    │       ├── TutorialList.jsx
 │    │
-|    |--- helpers (folder)
-|    |       |── StartData.jsx
 │    │
 │    |--- pages (folder)
 |    |      ├── Home.jsx
 |    |
 │    ├--- App.js
-│    │--- App.css
 │    |--- index.js
 │
 │
@@ -117,143 +115,379 @@ OR
 ```
 
 ---
-
 ### At the end of the project, the following topics are to be covered;
 
-- useEffect() & useState() & LocalStorage & Conditional rendering 
+- CRUD(READ-GET with axios)useEffect()  (componentDidUpdate() ) & useState() & onChange, onSubmit Events
 
+- 
  ```jsx
-     import React from "react";
-        import Header from "../components/Header";
-        import ShowTasks from "../components/ShowTasks";
-        import { useState, useEffect } from "react";
-        // import data from '../helper/starterData';
-
-        const Home = () => {
-            const [tasks, setTasks] = useState(
-                JSON.parse(localStorage.getItem("tasks")) || []
-            );
-
-            useEffect(() => {
-                localStorage.setItem("tasks", JSON.stringify(tasks));
-            }, [tasks]);
-
-            // console.log(tasks);
-            return (
-                <div className="container">
-                    <Header tasks={tasks} setTasks={setTasks} />
-                    {tasks.length > 0 ? (
-                        <ShowTasks tasks={tasks} setTasks={setTasks} />
-                    ) : (
-                        <p className="text-center">NO TASK TO SHOW</p>
-                    )}
-                </div>
-                
-            );
+    import { useEffect, useState } from "react";
+    import AddTutorial from "../components/AddTutorial";
+    import TutorialList from "../components/TutorialList";
+    import axios from "axios";
+    
+    const Home = () => {
+        const [tutorials, setTutorials] = useState([]);
+    
+        const getTutorials = async () => {
+            const BASE_URL =
+                "https://tutorial-api.fullstack.clarusway.com/tutorials/";
+            try {
+                // const res = await axios(BASE_URL)
+                // setTutorials(res.data)
+                const { data } = await axios(BASE_URL);
+                setTutorials(data);
+            } catch (error) {
+                console.log(error);
+            }
         };
-
-        export default Home;
+    
+        console.log(tutorials);
+    
+        //? Mount asamasinda api'ye istek atiyoruz
+        useEffect(() => {
+            getTutorials();
+        }, []);
+    
+        return (
+            <>
+                <AddTutorial getTutorials={getTutorials} />
+                <TutorialList tutorials={tutorials} getTutorials={getTutorials} />
+            </>
+        );
+    };
+    
+    export default Home;
+     
  ```
-
-- conditional rendering & toggle
+- CRUD(CREATE-POST with axios)
 
     ```jsx
-        import AddTaskForm from "./AddTaskForm";
-        import { useState } from "react";
+      import { useState } from "react";
+      import axios from "axios";
+    
+     const AddTutorial = ({ getTutorials }) => {
+        const [title, setTitle] = useState("");
+        const [description, setDescription] = useState("");
 
-        const Header = ({ tasks, setTasks }) => {
-            const [show, setShow] = useState(false);
-            const [btnStyle, setBtnStyle] = useState({
-                name: "SHOW ADD TASK BAR",
-                bgColor: "purple",
-            });
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const newTutor = { title: title, description: description };
+        console.log(newTutor);
+        postTutorial(newTutor);
 
-            //! React, default olarak state'leri hemen degistirmeyebilir.
-            //! Ekstra render'lari azaltmak icin state'leri toplu (batch) bir sekilde gunceller.
-            //! Bir event handler icerisindeki ardasik state'ler event bitiminde toplu bir
-            //! sekilde guncellenmis olur.State'lerin guncelenmesi gelis sirasina gorere yapilir.
-            //! Ayni event icerisinde birbirine bagli state'leri kullanirken buna dikkat etmek gerkir.
+        setTitle("");
+        setDescription("");
+    };
 
-            //? https://stackoverflow.com/questions/48563650/does-react-keep-the-order-for-state-updates
+    const postTutorial = async (newTutor) => {
+        const BASE_URL =
+            "https://tutorial-api.fullstack.clarusway.com/tutorials/";
+        try {
+            const res = await axios.post(BASE_URL, newTutor);
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+        }
 
-            const handleShow = () => {
-                if (show) {
-                    setBtnStyle({
-                        name: "SHOW ADD TASK BAR",
-                        bgColor: "purple",
-                    });
-                } else {
-                    setBtnStyle({
-                        name: "CLOSE ADD TASK BAR",
-                        bgColor: "red",
-                    });
-                }
-                setShow(!show);
-            };
-            // console.log(show);
+        //? Tum tutorial'lari iste ve state'i guncelle
+        getTutorials();
+    };
 
-            return (
-                <header className="header">
-                    <h1>TASK TRACKER</h1>
-                    <button
-                        onClick={handleShow}
-                        className="btn"
-                        style={{ backgroundColor: btnStyle.bgColor }}
-                    >
-                        {btnStyle.name}
-                    </button>
-                    {show && <AddTaskForm tasks={tasks} setTasks={setTasks} />}
-                </header>
-            );
-        };
+    return (
+        <div className="container text-center mt-4">
+            <h1 className="display-6 text-danger">Add Your Tutorial</h1>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                    <label htmlFor="title" className="form-label">
+                        Title
+                    </label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="title"
+                        placeholder="Enter your title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="desc" className="form-label">
+                        Description
+                    </label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="desc"
+                        placeholder="Enter your Description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit" className="btn btn-danger mb-4">
+                    Submit
+                </button>
+            </form>
+        </div>
+    );
+    };
+    
+    export default AddTutorial;
 
-        export default Header;
+       
     ```
 
--  with filter deleting
+- CRUD(UPDATE-PUT  with axios)useEffect()  (componentDidUpdate() ) & useState() & onChange, onSubmit Events
+
+ ```jsx
+        import axios from "axios";
+        import { useEffect, useState } from "react";
+        
+        const EditTutorial = ({ editItem, getTutorials }) => {
+            console.log(editItem);
+        
+            const { id, description: oldDescription, title: oldTitle } = editItem;
+            console.log("old", oldTitle);
+            console.log("old", oldDescription);
+            //? https://react.dev/reference/react/useState#usestate
+            //! State degiskeninin degeri, 1.render ile initialState
+            //! parametresinin ilk degerini alir. Dolayisiyle bu durumda
+            //! prop'tan gelen ilk deger state'e aktarilir.
+            //! Sonradan degisen props degerleri useState'e aktarilmaz.
+            //! Eger props'tan gelen degerleri her degisimde useState'e
+            //! aktarmak istersek useEffect hook'unu componentDidUpdate
+            //! gibi kullanabiriz.
+            const [title, setTitle] = useState(oldTitle);
+            const [description, setDescription] = useState(oldDescription);
+        
+            //? componentDidUpdate
+            useEffect(() => {
+                setTitle(oldTitle);
+                setDescription(oldDescription);
+                //? oldTitle veya oldDescriptiion her degistiginde local title ve description state'lerimizi guncelliyoruz.
+            }, [oldTitle, oldDescription]);
+        
+            console.log(title); //ilk render da undefined
+            console.log(description);
+        
+            const editTutor = async (tutor) => {
+                const BASE_URL =
+                    "https://tutorial-api.fullstack.clarusway.com/tutorials";
+        
+                try {
+                    await axios.put(`${BASE_URL}/${id}/`, tutor);
+                } catch (error) {
+                    console.log(error);
+                }
+                getTutorials();
+            };
+            const handleSubmit = (e) => {
+              e.preventDefault();
+             
+              editTutor({ title, description });
+              // !yada objeyi degiskene atayip parametre olarak gönderebiliriz
+              //  const tutor = {
+              //      title,
+              //      description,
+              //  };
+              //  editTutor(tutor);
+            };
+        
+            return (
+                <div
+                    className="modal fade"
+                    id="open-modal"
+                    tabIndex={-1}
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                >
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h1
+                                    className="modal-title text-danger fs-5"
+                                    id="exampleModalLabel"
+                                >
+                                    Edit Tutorial
+                                </h1>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                    onClick={() => {
+                                        setDescription("");
+                                        setTitle("");
+                                    }}
+                                />
+                            </div>
+                            <div className="modal-body">
+                                <form onSubmit={handleSubmit}>
+                                    <div className="mb-3">
+                                        <label htmlFor="title" className="form-label">
+                                            Title
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="title"
+                                            placeholder="Enter your title"
+                                            value={title || ""}
+                                            onChange={(e) => setTitle(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="desc" className="form-label">
+                                            Description
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="desc"
+                                            placeholder="Enter your Description"
+                                            value={description || ""}
+                                            onChange={(e) =>
+                                                setDescription(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </div>
+        
+                                    <div className="text-end">
+                                        <button
+                                            type="submit"
+                                            className="btn btn-danger"
+                                            data-bs-dismiss="modal"
+                                        >
+                                            Submit
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+        
+        export default EditTutorial;
+
+    
+ ```
+
+
+
+-  CRUD(DELETE-DELETE with Axios)
 
     ```jsx
-            import { FaTimesCircle } from "react-icons/fa";
-
-            const ShowTasks = ({ tasks, setTasks }) => {
-                console.log(tasks);
-                const toggleDone = (id) => {
-                    setTasks(
-                        tasks.map((task) =>
-                            task.id === id ? { ...task, isDone: !task.isDone } : task
-                        )
-                    );
-                };
-
-                const deleteTask = (id) => {
-                    setTasks(tasks.filter((task) => task.id !== id));
-                };
-                return (
-                    <div>
-                        {tasks.map((task) => {
-                            const { id, task: text, day, isDone } = task;
-                            return (
-                                <div
-                                    key={id}
-                                    className={`task ${isDone ? "done" : ""}`}
-                                    onDoubleClick={() => toggleDone(id)}
-                                >
-                                    <h3>
-                                        {text}
-                                        <FaTimesCircle
-                                            style={{ color: "red" }}
-                                            onClick={() => deleteTask(id)}
-                                        />
-                                    </h3>
-                                    <h6>{day}</h6>
-                                </div>
-                            );
-                        })}
-                    </div>
-                );
+            import { FaEdit } from "react-icons/fa";
+            import { AiFillDelete } from "react-icons/ai";
+            import axios from "axios";
+            import EditTutorial from "./EditTutorial";
+            import { useState } from "react";
+            
+            const TutorialList = ({ tutorials, getTutorials }) => {
+                const [editItem, setEditItem] = useState("");
+        
+            console.log(editItem);
+            // const tutorials = [
+            //   {
+            //     id: 1,
+            //     title: "JS",
+            //     description: "JS is a programming language",
+            //   },
+            //   {
+            //     id: 2,
+            //     title: "React",
+            //     description: "JS library for UI design",
+            //   },
+            //   {
+            //     id: 3,
+            //     title: "VUE",
+            //     description: "JS library for UI design",
+            //   },
+            // ]
+            const BASE_URL = "https://tutorial-api.fullstack.clarusway.com/tutorials";
+        
+            const handleDelete = async (id) => {
+                try {
+                    await axios.delete(`${BASE_URL}/${id}/`);
+                } catch (error) {
+                    console.log(error);
+                }
+                getTutorials();
             };
+        
+            // const editTutor = async (tutor) => {
+            //   try {
+            //     await axios.put(`${BASE_URL}/${tutor.id}/`, tutor)
+            //   } catch (error) {
+            //     console.log(error)
+            //   }
+            //   getTutorials()
+            // }
+        
+            return (
+                <div className="container mt-4">
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#id</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Description</th>
+                                <th scope="col" className="text-center">
+                                    Edit
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {tutorials?.map((item) => {
+                                const { id, title, description } = item;
+                                return (
+                                    <tr key={id}>
+                                        <th>{id}</th>
+                                        <td>{title}</td>
+                                        <td>{description}</td>
+                                        <td className="text-center text-nowrap">
+                                            <FaEdit
+                                                size={20}
+                                                type="button"
+                                                className="me-2 text-warning"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#open-modal"
+                                                // onClick={() =>
+                                                //   editTutor({
+                                                //     id: 1934,
+                                                //     title: "REACT",
+                                                //     description: "JS Library",
+                                                //   })
+                                                // }
+        
+                                                onClick={() => setEditItem(item)}
+                                            />
+                                            <AiFillDelete
+                                                size={22}
+                                                type="button"
+                                                className="text-danger "
+                                                onClick={() => handleDelete(id)}
+                                            />
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+        
+                    <EditTutorial editItem={editItem} getTutorials={getTutorials} />
+                </div>
+            );
+        };
+        
+        export default TutorialList;
 
-            export default ShowTasks;
     ```
 
 -   Semantic Commit Messages
