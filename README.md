@@ -11,7 +11,7 @@
 | ----------------------------------------------------- | ------------------------------------------ | -------------------------------------------------------------- |
 | [useEfect() Hook componentDidUpdate()](https://react.dev/learn#using-hooks)|                                            | [Take a look at my portfolio](https://kaplanh.github.io/Portfolio_with_CssFlex/) |
 | [useState() Hook](https://react.dev/learn#using-hooks)|                                            | [Visit me on Linkedin](https://www.linkedin.com/in/kaplan-h/)                    |
-| [CRUD OPERATIONS with axios API](https://www.npmjs.com/package/axios)(https://www.npmjs.com/package/axios#axios-api) | npm i/yarn add axios                        |                    |
+| [CRUD OPERATIONS with axios API](https://www.npmjs.com/package/axios#axios-api) | npm i/yarn add axios                        |                    |
 | [react-events](https://react.dev/learn#responding-to-events)|                                      |                    |
 | [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/) |                     |                    |
 | [React-icons](https://react-icons.github.io/react-icons/)| npm i / yarn add react-icons               |                 |
