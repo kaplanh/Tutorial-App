@@ -13,7 +13,11 @@
 | [useState() Hook](https://react.dev/learn#using-hooks)|                                            | [Visit me on Linkedin](https://www.linkedin.com/in/kaplan-h/)                    |
 | [CRUD OPERATIONS with axios API](https://www.npmjs.com/package/axios#axios-api) | npm i/yarn add axios                        |                    |
 | [react-events](https://react.dev/learn#responding-to-events)|                                      |                    |
-| [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/) |                     |                    |
+| [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/) | npm i / yarn add bootstrap & index.html'e <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>                   |                    |
 | [React-icons](https://react-icons.github.io/react-icons/)| npm i / yarn add react-icons               |                 |
 | [props-drilling](https://react.dev/learn#sharing-data-between-components)|                            |                 |
 | [Semantic-Commits](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716) |             |                 |
