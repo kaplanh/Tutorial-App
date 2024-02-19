@@ -2,7 +2,7 @@
 
 [:point_right: Click here to see on browser](https://tutorial-app-wine.vercel.app/)
 
-![tasktraker]
+![Tutorial app](https://github.com/kaplanh/Tutorial-App/assets/101884444/570228a5-eb25-4ae0-868e-a633f39e826a)
 
 
 ---
